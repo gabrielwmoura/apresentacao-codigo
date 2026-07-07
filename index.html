@@ -42,7 +42,7 @@
     /* ──────────── S0: Comparative table ──────────── */
     .tw { border-radius: 12px; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--b1); flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--b2) transparent; }
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-    thead th { padding: 12px 12px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid var(--b2); text-align: center; background: #101010; }
+    thead th { padding: 12px 12px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid var(--b2); text-align: center; background: #101010; position: sticky; top: 0; z-index: 3; }
     th.hf { text-align: left; width: 33%; color: #9eaab4; }
     th.hi { color: var(--teal); font-size: 10.5px; background: #0c1d18; border-left: 1px solid var(--tborder); border-top: 2px solid var(--teal); width: 23%; }
     th.hc { color: #9eaab4; font-size: 10.5px; width: 22%; }
@@ -60,8 +60,8 @@
     .crs { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--rdim); border:1.5px solid var(--rborder); color:var(--red); font-size:12px; font-weight:900; }
     .par { display:inline-flex; align-items:center; background:var(--ydim); border:1px solid var(--yborder); color:var(--yellow); font-size:9px; font-weight:700; padding:2px 8px; border-radius:9px; }
 
-    /* Price row */
-    .pr-row td { padding:0; border-top:2px solid var(--b2) !important; border-bottom:none; vertical-align:middle; }
+    /* Price row: pinned to the bottom of the scroll area so it stays visible however many feature rows there are */
+    .pr-row td { padding:0; border-top:2px solid var(--b2) !important; border-bottom:none; vertical-align:middle; position: sticky; bottom: 0; z-index: 3; box-shadow: 0 -8px 12px -8px rgba(0,0,0,.5); }
     .pr-row td.prb { background:#080808; }
     .pr-row td.pri { background:#07110d; border-left:1px solid var(--tborder); }
     .pr-row td.prc { background:#0f0f0f; }
