@@ -26,7 +26,7 @@
     }
 
     html, body { height: 100%; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #e4ecf2; overflow: hidden; }
-    .wr { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 28px; }
+    .wr { height: 100vh; height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 28px; }
 
 
 
@@ -40,7 +40,7 @@
     .st { font-size: 24px; font-weight: 900; color: #fff; letter-spacing: -.02em; }
 
     /* ──────────── S0: Comparative table ──────────── */
-    .tw { border-radius: 12px; overflow: hidden; border: 1px solid var(--b1); flex: 1; min-height: 0; }
+    .tw { border-radius: 12px; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--b1); flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--b2) transparent; }
     table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     thead th { padding: 12px 12px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid var(--b2); text-align: center; background: #101010; }
     th.hf { text-align: left; width: 33%; color: #9eaab4; }
