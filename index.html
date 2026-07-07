@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparativo — Código IPM 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:    #3DFDC4;
+      --tdim:    rgba(61,253,196,.11);
+      --tborder: rgba(61,253,196,.24);
+      --red:     #f87171;
+      --rdim:    rgba(248,113,113,.10);
+      --rborder: rgba(248,113,113,.25);
+      --yellow:  #fbbf24;
+      --ydim:    rgba(251,191,36,.10);
+      --yborder: rgba(251,191,36,.28);
+      --orange:  #FF530A;
+      --bg:      #0b0b0b;
+      --b1:      #1e1e1e;
+      --b2:      #2a2a2a;
+      --muted:   #b0bac2;
+    }
+
+    html, body { height: 100%; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: #e4ecf2; overflow: hidden; }
+    .wr { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 28px; }
+
+
+
+    /* ─── Slides ─── */
+    .sc { width: 100%; max-width: 1080px; position: relative; flex: 1; min-height: 0; }
+    .slide { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform: translateY(12px); transition: opacity .35s ease, transform .35s ease; display: flex; flex-direction: column; }
+    .slide.on { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    /* ─── Slide header ─── */
+    .sh { text-align: center; margin-bottom: 10px; }
+    .st { font-size: 24px; font-weight: 900; color: #fff; letter-spacing: -.02em; }
+
+    /* ──────────── S0: Comparative table ──────────── */
+    .tw { border-radius: 12px; overflow: hidden; border: 1px solid var(--b1); flex: 1; min-height: 0; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    thead th { padding: 12px 12px; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-bottom: 1px solid var(--b2); text-align: center; background: #101010; }
+    th.hf { text-align: left; width: 33%; color: #9eaab4; }
+    th.hi { color: var(--teal); font-size: 10.5px; background: #0c1d18; border-left: 1px solid var(--tborder); border-top: 2px solid var(--teal); width: 23%; }
+    th.hc { color: #9eaab4; font-size: 10.5px; width: 22%; }
+
+    tr.csr td { background: #0d0d0d; padding: 5px 12px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--teal); border-top: 1px solid var(--b2); border-bottom: 1px solid var(--b1); }
+    tr.csr td.ci { background: #091511; border-left: 1px solid var(--tborder); }
+    tr.csr td.cc { background: #0c0c0c; }
+
+    tbody td { border-bottom: 1px solid var(--b1); vertical-align: middle; }
+    td.feat { padding: 10px 12px; font-size: 12.5px; color: #cdd8e0; text-align: left; background: #0f0f0f; }
+    td.val  { padding: 10px 12px; text-align: center; background: #131313; }
+    td.vi   { background: #0b1b15; border-left: 1px solid var(--tborder); }
+
+    .chk { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--tdim); border:1.5px solid var(--tborder); color:var(--teal); font-size:12px; font-weight:900; }
+    .crs { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--rdim); border:1.5px solid var(--rborder); color:var(--red); font-size:12px; font-weight:900; }
+    .par { display:inline-flex; align-items:center; background:var(--ydim); border:1px solid var(--yborder); color:var(--yellow); font-size:9px; font-weight:700; padding:2px 8px; border-radius:9px; }
+
+    /* Price row */
+    .pr-row td { padding:0; border-top:2px solid var(--b2) !important; border-bottom:none; vertical-align:middle; }
+    .pr-row td.prb { background:#080808; }
+    .pr-row td.pri { background:#07110d; border-left:1px solid var(--tborder); }
+    .pr-row td.prc { background:#0f0f0f; }
+    .pr-row td.prm { background:#111; }
+
+    .pi  { max-height:0; overflow:hidden; transition:max-height .52s cubic-bezier(.4,0,.2,1); }
+    .pi.show { max-height:200px; }
+    .pic { padding:13px 12px; opacity:0; transition:opacity .3s ease .18s; }
+    .pi.show .pic { opacity:1; }
+
+    .pb-in  { text-align:center; }
+    .plbl   { font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:#7e8e9c; margin-bottom:2px; }
+    .ppn    { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#7e8e9c; }
+    .ppv    { font-size:14px; font-weight:800; color:#dce8f0; }
+    .pm     { font-size:20px; font-weight:900; color:#fff; letter-spacing:-.02em; line-height:1; }
+    .pm.t   { color:var(--teal); }
+    .pv     { font-size:9.5px; color:#7a8898; margin-top:4px; }
+    .psep   { height:1px; background:#222; margin:6px 0; }
+
+    /* IPM struck animation */
+    .ipm-wrap { position:relative; display:inline-block; }
+    .ipm-wrap::after { content:''; position:absolute; left:0; top:50%; width:0; height:2px; background:#666; transition:width .5s cubic-bezier(.4,0,.2,1); transform:translateY(-50%); }
+    .ipm-block.struck .ipm-wrap::after { width:100%; }
+    .ipm-pm   { transition:color .4s ease .25s; }
+    .ipm-vsta { transition:color .4s ease .25s; color:#7a8898; }
+    .ipm-block.struck .ipm-pm   { color:#363636; }
+    .ipm-block.struck .ipm-vsta { color:#2a2a2a; }
+    .ipm-l1 { max-height:0; overflow:hidden; opacity:0; transition:max-height .5s ease .45s, opacity .4s ease .55s; }
+    .ipm-block.struck .ipm-l1 { max-height:100px; opacity:1; }
+    .ipm-l1-in { padding-top:8px; margin-top:6px; border-top:1px solid #1e2e28; }
+
+    /* ──────────── S1: Benefícios (revelação 1 a 1) ──────────── */
+    .bs { display:flex; flex-direction:column; }
+    #s1 { justify-content: center; gap: 8px; }
+
+    .bg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-width: 780px;
+      width: 100%;
+      margin: 12px auto 0;
+    }
+    @media (max-width: 640px) { .bg { grid-template-columns: 1fr; } }
+
+    /* All benefit cards start invisible, animate in one by one */
+    .bc {
+      background: #111;
+      border: 1px solid var(--b1);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .bc.vis { opacity: 1; transform: translateY(0); }
+    .bc.span2 { grid-column: span 2; }
+
+    .bic { font-size: 20px; flex-shrink: 0; line-height: 1; }
+    .btl { font-size: 13.5px; font-weight: 700; color: #f0f4f7; }
+
+    /* 5% highlight card */
+    .bc.hl {
+      background: linear-gradient(135deg, #08180f, #0d2318);
+      border-color: var(--tborder);
+      position: relative;
+      overflow: hidden;
+    }
+    .bc.hl::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--teal),transparent); }
+    .bc.hl .btl { color: var(--teal); font-size: 15px; }
+    .opct { font-size: 44px; font-weight: 900; color: var(--teal); line-height: 1; flex-shrink: 0; }
+
+    /* ──────────── S2: Comparativo de planos ──────────── */
+    #s2 { justify-content: center; gap: 12px; }
+
+    .compare-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    /* IPM card (left, dynamic) */
+    .ipm-card {
+      background: linear-gradient(135deg, #09201a, #0e2a1e);
+      border: 2px solid var(--teal); border-radius: 14px;
+      padding: 26px 22px; text-align: center; position: relative; overflow: hidden;
+      box-shadow: 0 0 0 1px var(--teal), 0 12px 32px rgba(61,253,196,.1);
+    }
+    .ipm-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--teal),transparent); }
+    #ipm-dyn { transition: opacity .18s ease, transform .18s ease; }
+    .ipm-badge { display:inline-block; font-size:9.5px; font-weight:800; letter-spacing:.06em; color:var(--orange); background:rgba(255,83,10,.15); border:1px solid rgba(255,83,10,.35); padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+    .ipm-name  { font-size:21px; font-weight:900; color:#fff; margin-bottom:3px; }
+    .ipm-sub   { font-size:11px; color:rgba(61,253,196,.5); margin-bottom:14px; }
+    .ipm-prev  { font-size:12px; color:#3e4a52; text-decoration:line-through; margin-bottom:2px; }
+    .ipm-lbl   { font-size:9px; color:rgba(61,253,196,.4); text-transform:uppercase; letter-spacing:.1em; }
+    .ipm-price { font-size:38px; font-weight:900; color:var(--teal); letter-spacing:-.02em; line-height:1.1; }
+    .ipm-vista { font-size:11px; color:rgba(61,253,196,.4); margin-top:6px; }
+
+    /* Competitor card (right, static) */
+    .comp-card { background:#111; border:1px solid var(--b1); border-radius:14px; padding:22px; display:flex; flex-direction:column; }
+    .comp-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:10px; }
+    .comp-item  { padding:10px 0; }
+    .comp-item:not(:last-child) { border-bottom:1px solid var(--b1); }
+    .comp-brand { font-size:11px; color:#7e8e9c; font-weight:600; margin-bottom:3px; }
+    .comp-price { font-size:20px; font-weight:800; color:#ccd4da; letter-spacing:-.01em; }
+    .comp-vista { font-size:10px; color:#7a8898; margin-top:2px; }
+
+    /* Bottom plan selector */
+    .plan-sel { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+    .ps-btn {
+      background:#141414; border:1px solid var(--b1); border-radius:10px;
+      padding:13px 10px; text-align:center; cursor:pointer; transition:all .2s ease;
+    }
+    .ps-btn:hover { border-color:var(--tborder); background:#1a1a1a; }
+    .ps-btn.sel   { border-color:var(--teal); background:var(--tdim); box-shadow:0 0 0 1px var(--teal); }
+    .ps-btn-name  { font-size:12px; font-weight:700; color:#e0e8ee; }
+    .ps-btn.sel .ps-btn-name { color:var(--teal); }
+    .ps-btn-price { font-size:11px; color:var(--muted); margin-top:3px; }
+
+    /* ──────────── Login gate ──────────── */
+    .login-ov {
+      position: fixed; inset: 0; z-index: 100;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .login-ov.hidden { display: none; }
+    .login-box {
+      width: 100%; max-width: 340px;
+      background: #111; border: 1px solid var(--b1); border-radius: 14px;
+      padding: 32px 28px; text-align: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,.4);
+    }
+    .login-title { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 4px; letter-spacing: -.02em; }
+    .login-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+    .login-input {
+      width: 100%; background: #0b0b0b; border: 1px solid var(--b2); border-radius: 8px;
+      padding: 12px 14px; font-size: 14px; color: #e4ecf2; font-family: inherit;
+      outline: none; transition: border-color .2s ease;
+    }
+    .login-input:focus { border-color: var(--teal); }
+    .login-btn {
+      width: 100%; margin-top: 12px; background: var(--teal); border: none; border-radius: 8px;
+      padding: 12px 14px; font-size: 13.5px; font-weight: 800; color: #06120d; font-family: inherit;
+      cursor: pointer; transition: opacity .2s ease;
+    }
+    .login-btn:hover { opacity: .88; }
+    .login-err {
+      font-size: 11.5px; color: var(--red); margin-top: 10px; height: 14px;
+      opacity: 0; transition: opacity .2s ease;
+    }
+    .login-err.show { opacity: 1; }
+    .wr.locked { visibility: hidden; }
+  </style>
+</head>
+<body>
+
+<div class="login-ov" id="loginOv">
+  <div class="login-box">
+    <div class="login-title">Acesso restrito</div>
+    <div class="login-sub">Digite a senha para ver a apresentação</div>
+    <form id="loginForm" autocomplete="off">
+      <input class="login-input" type="password" id="loginPw" placeholder="Senha" autocomplete="off" />
+      <button class="login-btn" type="submit">Entrar</button>
+      <div class="login-err" id="loginErr">Senha incorreta</div>
+    </form>
+  </div>
+</div>
+
+<div class="wr locked" id="wr">
+
+
+
+  <div class="sc">
+
+    <!-- ══════ S0: Tabela comparativa (estados 0–4) ══════ -->
+    <div class="slide on" id="s0">
+      <div class="sh"><div class="st">Comparativo</div></div>
+      <div class="tw">
+        <table>
+          <thead>
+            <tr>
+              <th class="hf">Funcionalidade</th>
+              <th class="hi">Código IPM 2026</th>
+              <th class="hc">MedCof HIIT</th>
+              <th class="hc">Medgrupo Intensivão</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="csr"><td>Personalização</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Seleção da(s) instituição(ões) alvo</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Cronograma de estudos personalizado</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+
+            <tr class="csr"><td>Banco de Questões</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Banco filtrado por prova e tema</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Análise estatística por instituição</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+
+            <tr class="csr"><td>Conteúdo & Revisão</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Aulas de revisão (+200 aulas)</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Flashcards de aprofundamento (+20k)</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+
+            <tr class="csr"><td>Tecnologia</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Dashboard de desempenho em tempo real</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td class="feat">I.A para revisões personalizadas (Otto)</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+
+            <!-- Price row (4 cells, individually animated) -->
+            <tr class="pr-row">
+              <td class="prb">
+                <div class="pi" id="pi-lbl">
+                  <div class="pic" style="display:flex;align-items:center;">
+                    <span style="font-size:12px;font-weight:800;color:#fff;">Preço</span>
+                  </div>
+                </div>
+              </td>
+              <td class="pri">
+                <div class="pi" id="pi-ipm">
+                  <div class="pic ipm-block" id="ipm-block">
+                    <div class="pb-in">
+                      <div class="plbl">29 instituições · 12x de</div>
+                      <div class="ipm-wrap">
+                        <div class="pm ipm-pm">R$424,02</div>
+                      </div>
+                      <div class="ipm-vsta pv">ou R$4.897 à vista</div>
+                      <div class="ipm-l1">
+                        <div class="ipm-l1-in">
+                          <div class="plbl">12x de</div>
+                          <div class="pm t">R$399,02</div>
+                          <div class="pv" style="color:rgba(61,253,196,.45);">ou R$4.597 à vista</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="prc">
+                <div class="pi" id="pi-cof">
+                  <div class="pic">
+                    <div class="pb-in">
+                      <div class="plbl">HIIT Elite</div>
+                      <div class="pm">12x R$499,87</div>
+                      <div class="pv">ou R$4.997 à vista</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="prm">
+                <div class="pi" id="pi-med">
+                  <div class="pic">
+                    <div class="pb-in">
+                      <div class="plbl">pacote completo</div>
+                      <div class="pm">12x R$768</div>
+                      <div class="pv">ou R$7.888 à vista</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /s0 -->
+
+    <!-- ══════ S1: Benefícios exclusivos (estados 5–12) ══════ -->
+    <div class="slide" id="s1">
+      <div class="sh"><div class="st">Benefícios exclusivos</div></div>
+      <div class="bs">
+        <div class="bg">
+
+          <!-- 7 benefícios (aparecem 1 a 1, estados 5–11) -->
+          <div class="bc" id="bc0">
+            <div class="bic">🎟️</div>
+            <div><div class="btl">Ingresso gratuito ao IPM Day 2027</div></div>
+          </div>
+
+          <div class="bc" id="bc1">
+            <div class="bic">🎬</div>
+            <div><div class="btl">Aulas de atualização <span style="color:var(--yellow);font-size:9.5px;font-weight:700;">(em breve)</span></div></div>
+          </div>
+
+          <div class="bc" id="bc2">
+            <div class="bic">📋</div>
+            <div><div class="btl">Material exclusivo para o dia da prova</div></div>
+          </div>
+
+          <div class="bc" id="bc3">
+            <div class="bic">💬</div>
+            <div><div class="btl">Grupo exclusivo no WhatsApp</div></div>
+          </div>
+
+          <div class="bc" id="bc4">
+            <div class="bic">📱</div>
+            <div><div class="btl">WhatsApp pessoal do Pedro Miranda</div></div>
+          </div>
+
+          <div class="bc" id="bc5">
+            <div class="bic">🎥</div>
+            <div><div class="btl">2 lives exclusivas de preparação</div></div>
+          </div>
+
+          <!-- Card 7: Valor de Lançamento (estado 11, span 2 cols) -->
+          <div class="bc span2" id="bc6">
+            <div class="bic">🏷️</div>
+            <div><div class="btl">Valor de Lançamento garantido</div></div>
+          </div>
+
+          <!-- 5% OFF (estado 12, span 2 cols, destaque verde) -->
+          <div class="bc hl span2" id="bc7">
+            <div class="opct">5%</div>
+            <div><div class="btl">OFF pelo seu tempo nessa reunião</div></div>
+          </div>
+
+        </div>
+      </div>
+    </div><!-- /s1 -->
+
+    <!-- ══════ S2: Comparativo de planos (estado 13) ══════ -->
+    <div class="slide" id="s2">
+      <div class="sh"><div class="st">Escolha o plano ideal</div></div>
+
+      <!-- Top: IPM (dinâmico) vs Concorrentes (estático) -->
+      <div class="compare-row">
+
+        <!-- Esquerda: plano IPM selecionado (atualiza ao clicar embaixo) -->
+        <div class="ipm-card">
+          <div id="ipm-dyn">
+            <div class="ipm-badge">5% OFF · Valor de Lançamento</div>
+            <div class="ipm-name" id="dyn-name">Todas as Instituições</div>
+            <div class="ipm-sub"  id="dyn-sub">Acesso completo às 29 disponíveis</div>
+            <div class="ipm-prev" id="dyn-prev">12x R$399,02</div>
+            <div class="ipm-lbl">12x de</div>
+            <div class="ipm-price" id="dyn-price">R$379,07</div>
+            <div class="ipm-vista" id="dyn-vista">ou R$4.367,15 à vista</div>
+          </div>
+        </div>
+
+        <!-- Direita: preços dos concorrentes (estático) -->
+        <div class="comp-card">
+          <div class="comp-title">Concorrentes</div>
+          <div class="comp-item">
+            <div class="comp-brand">MedCof HIIT Elite</div>
+            <div class="comp-price">12x R$499,87</div>
+            <div class="comp-vista">ou R$4.997 à vista</div>
+          </div>
+          <div class="comp-item">
+            <div class="comp-brand">Medgrupo Intensivão</div>
+            <div class="comp-price">12x R$768,00</div>
+            <div class="comp-vista">ou R$7.888 à vista</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Embaixo: seletor de plano (clique para atualizar o card da esquerda) -->
+      <div class="plan-sel">
+        <div class="ps-btn" onclick="selPlan(this,0)">
+          <div class="ps-btn-name">1 Instituição</div>
+          <div class="ps-btn-price">12x R$304,86</div>
+        </div>
+        <div class="ps-btn" onclick="selPlan(this,1)">
+          <div class="ps-btn-name">3 Instituições</div>
+          <div class="ps-btn-price">12x R$346,09</div>
+        </div>
+        <div class="ps-btn" onclick="selPlan(this,2)">
+          <div class="ps-btn-name">5 Instituições</div>
+          <div class="ps-btn-price">12x R$362,57</div>
+        </div>
+        <div class="ps-btn sel" onclick="selPlan(this,3)">
+          <div class="ps-btn-name">Todas as Inst.</div>
+          <div class="ps-btn-price">12x R$379,07</div>
+        </div>
+      </div>
+
+    </div><!-- /s2 -->
+
+  </div><!-- /sc -->
+</div><!-- /wr -->
+
+<script>
+  // ──────────── Login gate ────────────
+  (function () {
+    const PW_HASH = '5ee7d442f32b68c364dd42f083b99618d4181bbbb3c19ca42300f066061c9193';
+    const SESSION_KEY = 'ipm_auth_ok';
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function unlock() {
+      document.getElementById('loginOv').classList.add('hidden');
+      document.getElementById('wr').classList.remove('locked');
+    }
+
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      unlock();
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pw = document.getElementById('loginPw').value;
+      const hash = await sha256(pw);
+      const err = document.getElementById('loginErr');
+      if (hash === PW_HASH) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        err.classList.remove('show');
+        unlock();
+      } else {
+        err.classList.add('show');
+      }
+    });
+  })();
+
+  let st = 0;
+  const T  = 14;
+
+  // Slide each state maps to
+  const sm = {
+    0:'s0', 1:'s0', 2:'s0', 3:'s0', 4:'s0',
+    5:'s1', 6:'s1', 7:'s1', 8:'s1', 9:'s1', 10:'s1', 11:'s1', 12:'s1',
+    13:'s2'
+  };
+
+  // Comparative price cells
+  const piLbl  = document.getElementById('pi-lbl');
+  const piIpm  = document.getElementById('pi-ipm');
+  const piCof  = document.getElementById('pi-cof');
+  const piMed  = document.getElementById('pi-med');
+  const ipmBlk = document.getElementById('ipm-block');
+
+  // Benefit cards (bc0–bc7, states 5–12)
+  const bcards = Array.from({length: 8}, (_, i) => document.getElementById('bc' + i));
+
+  function go(n) {
+    if (n === st || n < 0 || n >= T) return;
+
+    // Slide transition
+    const from = sm[st], to = sm[n];
+    if (from !== to) {
+      document.getElementById(from).classList.remove('on');
+      document.getElementById(to).classList.add('on');
+    }
+
+    // Price cells (states 1–4 on s0)
+    piLbl.classList.toggle('show', n >= 1 && n <= 4);
+    piMed.classList.toggle('show', n >= 1 && n <= 4);
+    piCof.classList.toggle('show', n >= 2 && n <= 4);
+    piIpm.classList.toggle('show', n >= 3 && n <= 4);
+    ipmBlk.classList.toggle('struck', n >= 4);
+
+    // Benefit cards: each appears at state 5 + index
+    bcards.forEach((card, i) => {
+      if (card) card.classList.toggle('vis', n >= 5 + i);
+    });
+
+    st = n;
+  }
+
+  function nav(d) { go(st + d); }
+
+  const plans = [
+    { name:'1 Instituição',        sub:'Escolha 1 dentre as 29 disponíveis', prev:'12x R$320,90', price:'R$304,86', vista:'ou R$3.512,15 à vista' },
+    { name:'3 Instituições',       sub:'Escolha 3 dentre as 29 disponíveis', prev:'12x R$364,30', price:'R$346,09', vista:'ou R$3.987,15 à vista' },
+    { name:'5 Instituições',       sub:'Escolha 5 dentre as 29 disponíveis', prev:'12x R$381,65', price:'R$362,57', vista:'ou R$4.177,15 à vista' },
+    { name:'Todas as Instituições', sub:'Acesso completo às 29 disponíveis', prev:'12x R$399,02', price:'R$379,07', vista:'ou R$4.367,15 à vista' },
+  ];
+
+  function selPlan(el, idx) {
+    document.querySelectorAll('.ps-btn').forEach(c => c.classList.remove('sel'));
+    el.classList.add('sel');
+    const p   = plans[idx];
+    const dyn = document.getElementById('ipm-dyn');
+    dyn.style.opacity   = '0';
+    dyn.style.transform = 'translateY(5px)';
+    setTimeout(() => {
+      document.getElementById('dyn-name').textContent  = p.name;
+      document.getElementById('dyn-sub').textContent   = p.sub;
+      document.getElementById('dyn-prev').textContent  = p.prev;
+      document.getElementById('dyn-price').textContent = p.price;
+      document.getElementById('dyn-vista').textContent = p.vista;
+      dyn.style.opacity   = '1';
+      dyn.style.transform = 'translateY(0)';
+    }, 180);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nav(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   nav(-1);
+  });
+
+
+</script>
+</body>
+</html>
