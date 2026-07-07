@@ -93,6 +93,13 @@
     .ipm-block.struck .ipm-l1 { max-height:100px; opacity:1; }
     .ipm-l1-in { padding-top:8px; margin-top:6px; border-top:1px solid #1e2e28; }
 
+    /* Mobile: comparative table scrolls horizontally instead of squeezing columns unreadable */
+    @media (max-width: 640px) {
+      .tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { min-width: 620px; }
+      th.hf, td.feat { font-size: 11.5px; }
+    }
+
     /* ──────────── S1: Benefícios (revelação 1 a 1) ──────────── */
     .bs { display:flex; flex-direction:column; }
     #s1 { justify-content: center; gap: 8px; }
@@ -260,60 +267,106 @@
           </thead>
           <tbody>
 
-            <tr class="csr"><td>Personalização</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr class="csr"><td>Diagnóstico &amp; Personalização</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
             <tr>
-              <td class="feat">Seleção da(s) instituição(ões) alvo</td>
+              <td class="feat">Seu plano começa pelo seu diagnóstico, não por uma grade genérica</td>
               <td class="val vi"><span class="chk">✓</span></td>
               <td class="val"><span class="crs">✗</span></td>
               <td class="val"><span class="crs">✗</span></td>
             </tr>
             <tr>
-              <td class="feat">Cronograma de estudos personalizado</td>
+              <td class="feat">Cronograma de acordo com o seu nível atual</td>
               <td class="val vi"><span class="chk">✓</span></td>
               <td class="val"><span class="par">Parcial</span></td>
               <td class="val"><span class="crs">✗</span></td>
             </tr>
-
-            <tr class="csr"><td>Banco de Questões</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
             <tr>
-              <td class="feat">Banco filtrado por prova e tema</td>
+              <td class="feat">Estudo adaptado ao tempo que você realmente tem</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="crs">✗</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Você estuda para as instituições que realmente vai prestar</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+            </tr>
+
+            <tr class="csr"><td>Direcionamento por Prova</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Foco no que mais cai nas suas provas</td>
               <td class="val vi"><span class="chk">✓</span></td>
               <td class="val"><span class="chk">✓</span></td>
               <td class="val"><span class="par">Parcial</span></td>
             </tr>
             <tr>
-              <td class="feat">Análise estatística por instituição</td>
-              <td class="val vi"><span class="chk">✓</span></td>
-              <td class="val"><span class="crs">✗</span></td>
-              <td class="val"><span class="crs">✗</span></td>
-            </tr>
-
-            <tr class="csr"><td>Conteúdo & Revisão</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
-            <tr>
-              <td class="feat">Aulas de revisão (+200 aulas)</td>
-              <td class="val vi"><span class="chk">✓</span></td>
-              <td class="val"><span class="chk">✓</span></td>
-              <td class="val"><span class="chk">✓</span></td>
-            </tr>
-            <tr>
-              <td class="feat">Flashcards de aprofundamento (+20k)</td>
-              <td class="val vi"><span class="chk">✓</span></td>
-              <td class="val"><span class="par">Parcial</span></td>
-              <td class="val"><span class="crs">✗</span></td>
-            </tr>
-
-            <tr class="csr"><td>Tecnologia</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
-            <tr>
-              <td class="feat">Dashboard de desempenho em tempo real</td>
+              <td class="feat">Você sabe exatamente onde concentrar energia</td>
               <td class="val vi"><span class="chk">✓</span></td>
               <td class="val"><span class="par">Parcial</span></td>
               <td class="val"><span class="crs">✗</span></td>
             </tr>
             <tr>
-              <td class="feat">I.A para revisões personalizadas (Otto)</td>
+              <td class="feat">Questões no padrão da sua banca</td>
               <td class="val vi"><span class="chk">✓</span></td>
-              <td class="val"><span class="crs">✗</span></td>
-              <td class="val"><span class="crs">✗</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+            </tr>
+
+            <tr class="csr"><td>Conteúdo &amp; Revisão</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Aulas objetivas com a didática IPM</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Mais de 15 mil questões comentadas</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Mais de 20 mil flashcards para fixação e aprofundamento</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+            </tr>
+            <tr>
+              <td class="feat">Revisão no momento certo para não esquecer</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+            </tr>
+
+            <tr class="csr"><td>Tecnologia &amp; Performance</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Você acompanha sua evolução e corrige a rota</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+            </tr>
+            <tr>
+              <td class="feat">IA integrada ao seu estudo dentro da metodologia IPM</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+              <td class="val"><span class="chk">✓</span></td>
+            </tr>
+
+            <tr class="csr"><td>ENAMED</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Projeto ENAMED com mais de 1.000 questões</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+            </tr>
+
+            <tr class="csr"><td>Adaptação ao Perfil</td><td class="ci"></td><td class="cc"></td><td class="cc"></td></tr>
+            <tr>
+              <td class="feat">Do zero ao avançado: o Código se adapta ao seu momento</td>
+              <td class="val vi"><span class="chk">✓</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
+              <td class="val"><span class="par">Parcial</span></td>
             </tr>
 
             <!-- Price row (4 cells, individually animated) -->
